@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Blank Template (TypeScript)",
+    "name": "Chat Sample",
     "slug": "chat-sample",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -25,6 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.chat_sample_yaneq",
+      "versionCode": 1
     }
   }
 }
