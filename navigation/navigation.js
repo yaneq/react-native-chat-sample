@@ -1,21 +1,29 @@
 import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import ChatListContainer from '../components/ChatList/ChatList.container';
 import ChatContainer from '../components/Chat/Chat.container';
 import SettingsContainer from '../components/Settings/Settings.container';
 
-const ChatNavigator = createStackNavigator(
-  {
-    ChatListScreen: ChatListContainer,
-    ChatScreen: ChatContainer,
-  },
-  {initialRouteName: 'ChatListScreen'},
-);
-
 const RootNavigator = createDrawerNavigator({
-  Chats: ChatNavigator,
-  Settings: SettingsContainer,
+  general: {
+    title: "title",
+    drawerLabel: "#general",
+    headerTitle: "#general",
+    params: {title: 'general'},
+    screen: ChatContainer,
+  },
+  random: {
+    drawerLabel: "#random",
+    screen: ChatContainer,
+    params: {title: 'random'},
+  },
+},
+{
+  drawerBackgroundColor: '#303',
+  contentOptions: {
+    activeTintColor: 'white',
+    activeBackgroundColor: '#505',
+    inactiveTintColor: '#cab'
+  }
 });
 
 const NavigationContainer = createAppContainer(RootNavigator);
