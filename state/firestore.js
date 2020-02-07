@@ -3,16 +3,25 @@ import {
   receiveMessage
 } from './reducers/chat.reducer';
 
+let store = null;
+
 const initializeApp = () => {
   console.log('============ in init')
   if (!firebase.apps.length) {
+    // firebase.initializeApp({
+    //   apiKey: "AIzaSyDZJZm9TgdBItFu1agAWryuKHWXv8og4pE",
+    //   authDomain: "stachka-example.firebaseapp.com",
+    //   databaseURL: "https://stachka-example.firebaseio.com",
+    //   projectId: "stachka-example",
+    //   storageBucket: "stachka-example.appspot.com",
+    //   messagingSenderId: "907316643379"
+    // });
     firebase.initializeApp({
-      apiKey: "AIzaSyDZJZm9TgdBItFu1agAWryuKHWXv8og4pE",
-      authDomain: "stachka-example.firebaseapp.com",
-      databaseURL: "https://stachka-example.firebaseio.com",
-      projectId: "stachka-example",
-      storageBucket: "stachka-example.appspot.com",
-      messagingSenderId: "907316643379"
+      apiKey: "AIzaSyBD80MmwwZNe8lACA5rR-surFY7GqDdV5U",
+      authDomain: "chat-example-17063.firebaseio.com",
+      databaseURL: "https://chat-example-17063.firebaseio.com",
+      projectId: "chat-example-17063",
+      storageBucket: "chat-example-17063.appspot.com"
     });
   }
 }
@@ -41,22 +50,28 @@ const init = (store) => {
   listen(store);
 }
 
+const parseAll = (snapshot, store) => {
+  // console.log('snapshot is parseAll val:', snapshot.val());
+  // console.log('typeof snapshot:', typeof snapshot);
+  // console.log('someval:', snapshot['-LdL3l6ry1zroqPqgobX']);
+  snapshot.forEach(val => {
+    // console.log('one key', key); // the name of the current key.
+    const parsedComment = parse(val)
+    // console.log('one val', parsedComment); // the name of the current key.
+    store.dispatch(receiveMessage(parsedComment));
+  });
+}
 
-// this.ref
-//       .limitToLast(20)
-//       .on('child_added', snapshot => callback(this.parse(snapshot)));
-
-const parse = snapshot => {
-  const { timestamp: numberStamp, text, user } = snapshot.val();
-  const { key: _id } = snapshot;
+const parse = rawComment => {
+  const { timestamp: numberStamp, text, user } = rawComment.val();
+  const { key: _id } = rawComment;
   const timestamp = new Date(numberStamp);
-  const message = {
+  return {
     _id,
     timestamp,
     text,
     user,
   };
-  return message;
 };
 
 const listen = (store) => {
@@ -65,7 +80,7 @@ const listen = (store) => {
     .database()
     .ref('messages')
     .limitToLast(30)
-    .on('child_added', (message => store.dispatch(receiveMessage(parse(message)))))
+    .on('value', (snapshot => parseAll(snapshot, store)))
 }
 //   firebase
 //     .firestore()
