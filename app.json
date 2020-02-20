@@ -24,10 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yaneq.chat-sample"
     },
     "android": {
-      "package": "com.chat_sample_yaneq",
+      "package": "com.yaneq.chat_sample",
       "versionCode": 1
     }
   }
