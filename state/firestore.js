@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import firestore from '@firebase/firestore';
 import {
   receiveMessage
 } from './reducers/chat.reducer';
@@ -44,14 +45,8 @@ const onAuthStateChanged = user => {
   }
 };
 
-const init = (store) => {
-  initializeApp();
-  // observeAuth();
-  listen(store);
-}
-
 const parseAll = (snapshot, store) => {
-  // console.log('snapshot is parseAll val:', snapshot.val());
+  console.log('snapshot is parseAll val:', snapshot);
   // console.log('typeof snapshot:', typeof snapshot);
   // console.log('someval:', snapshot['-LdL3l6ry1zroqPqgobX']);
   snapshot.forEach(val => {
@@ -63,7 +58,8 @@ const parseAll = (snapshot, store) => {
 }
 
 const parse = rawComment => {
-  const { timestamp: numberStamp, text, user } = rawComment.val();
+  // console.log('one comment', rawComment)
+  const { timestamp: numberStamp, text, user } = rawComment.data();
   const { key: _id } = rawComment;
   const timestamp = new Date(numberStamp);
   return {
@@ -77,24 +73,13 @@ const parse = rawComment => {
 const listen = (store) => {
   console.log('listen')
   firebase
-    .database()
-    .ref('messages')
-    .limitToLast(30)
-    .on('value', (snapshot => parseAll(snapshot, store)))
+    .firestore()
+    .collection('messages')
+    .get()
+    .then((snapshot) => parseAll(snapshot, store))
 }
-//   firebase
-//     .firestore()
-//     .collection('notes')
-//     .onSnapshot(snapshot => {
-//       let notes = [];
-//       snapshot.forEach(note => {
-//         console.log('Metadata Changes', note);
-//         const {text} = note.data();
-//         notes.push({id: note.id, text: text});
-//       });
-//       console.log('notes', notes);
-//       store.dispatch(receiveNotes(notes));
-//     });
-// };
-
-export const initFirebase = init;
+export const initFirebase = (store) => {
+  initializeApp();
+  // observeAuth();
+  listen(store);
+};
