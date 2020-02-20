@@ -3,7 +3,7 @@ import {Text, View, Platform, KeyboardAvoidingView, SafeAreaView, TouchableOpaci
 import {GiftedChat} from 'react-native-gifted-chat';
 import {styles} from './Chat.styles';
 
-export const ChatComponent = ({navigation, messages}) => {
+export const ChatComponent = ({navigation, messages, sendMessage}) => {
   const user = {
     name: 'some name',
     _id: '1'
@@ -20,7 +20,7 @@ export const ChatComponent = ({navigation, messages}) => {
     </TouchableOpacity>
   <GiftedChat
     messages={messages}
-    onSend={null}
+    onSend={sendMessage}
     user={user}
   />
   </View>)
